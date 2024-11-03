@@ -1,5 +1,5 @@
 # common-user-management
-common services to manage users and roles/privileges with simple demo project
+common services to manage users and roles/privileges using alreafy defined routes as security privileges with simple demo project
 
 - on startup the system will extract all defined routes and save to DB.
 - each role has a set of allowed privileges that can be modified as needed.
