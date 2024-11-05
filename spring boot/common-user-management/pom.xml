@@ -73,6 +73,10 @@
 			<version>2.16.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>
 		<!--		TO CREATE IMAGE THUMBNAILS-->
 		<dependency>
 			<groupId>org.imgscalr</groupId>
