@@ -1,3 +1,3 @@
 # Security Policy
 
-Report to "osamataher169@gmail.com"
+Report to osamataher169@gmail.com
