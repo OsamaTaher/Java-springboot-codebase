@@ -45,6 +45,9 @@ public class CustomerServiceImpl implements CustomerService, StaffCustomerServic
     @Override
     @Transactional
     public int updateProfilePicture(MultipartFile file) {
+        //make sure file is image
+        if(!storageService.isImage(file)) return OP_STATUS_FILE_TYPE_NOT_ALLOWED;
+
         var userId = userService.getAuthUserId();
         if(userId.isEmpty()) return OP_STATUS_FORBIDDEN;
         var customer  = customerRepository.findByUserId(userId.get());

@@ -36,6 +36,7 @@ public class OperationStatus {
     public static final int OP_STATUS_FILETYPE_MISMATCH = -14;
     public static final int OP_STATUS_WRONG_PASSWORD = -15;
     public static final int OP_STATUS_REFRESH_TOKEN_INVALID = -16;
+    public static final int OP_STATUS_FILE_TYPE_NOT_ALLOWED= -36;
 
     public static final int OP_STATUS_EMAIL_ALREADY_USED_BY_ANOTHER_ACCOUNT = -17;
     public static final int OP_STATUS_PRIVILEGE_NOT_FOUND = -18;
@@ -109,6 +110,13 @@ public class OperationStatus {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BasicResponse(HttpStatus.NOT_FOUND.value(), messageSource.getMessage("OP_STATUS_CUSTOMER_NOT_FOUND", null, LocaleContextHolder.getLocale())));
             case OP_STATUS_NOT_FOUND:
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BasicResponse(HttpStatus.NOT_FOUND.value(), messageSource.getMessage("OP_STATUS_NOT_FOUND", null, LocaleContextHolder.getLocale())));
+            case OP_STATUS_FILE_EMPTY:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new BasicResponse(HttpStatus.BAD_REQUEST.value(), messageSource.getMessage("OP_STATUS_FILE_EMPTY", null, LocaleContextHolder.getLocale())));
+            case OP_STATUS_INVALID_FILE_NAME:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new BasicResponse(HttpStatus.BAD_REQUEST.value(), messageSource.getMessage("OP_STATUS_INVALID_FILE_NAME", null, LocaleContextHolder.getLocale())));
+            case OP_STATUS_FILE_TYPE_NOT_ALLOWED:
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new BasicResponse(HttpStatus.FORBIDDEN.value(), messageSource.getMessage("OP_STATUS_FILE_TYPE_NOT_ALLOWED", null, LocaleContextHolder.getLocale())));
+
             default:
                 return ResponseEntity.internalServerError().body(new BasicResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Operation Failed"));
         }

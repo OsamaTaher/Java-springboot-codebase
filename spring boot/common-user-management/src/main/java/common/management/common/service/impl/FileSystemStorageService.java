@@ -4,6 +4,7 @@ import common.management.common.service.StorageService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.tika.Tika;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -41,14 +42,13 @@ public class FileSystemStorageService implements StorageService {
     private final HashSet<String> allowedFileType = new HashSet<>(List.of(
             "image/jpeg","image/jpg","image/png"
             ,"video/mp4"
-            ,"audio/wave","audio/wav","audio/x-wav","audio/x-pn-wav","audio/webm","audio/mpeg"
             ,"application/pdf"
             ,"application/vnd.openxmlformats-officedocument.wordprocessingml.document"
             ,"application/msword"
     ));
 
     private final HashSet<String> imageType = new HashSet<>(List.of("jpeg","jpg","png","gif"));
-
+    private final HashSet<String> allowedFilesExt = new HashSet<>(List.of("pdf","mp4", "jpeg","jpg","png","gif"));
 
     @Override
     public boolean isImage(MultipartFile file){
@@ -57,6 +57,13 @@ public class FileSystemStorageService implements StorageService {
 
     private boolean isImage(String ext){
         return imageType.contains(ext);
+    }
+
+    public boolean isAllowedFileType(MultipartFile file) throws IOException {
+        Tika tika = new Tika();
+        String mimeType = tika.detect(file.getInputStream());
+        return allowedFilesExt.contains(FilenameUtils.getExtension(file.getOriginalFilename()))
+        && allowedFileType.contains(mimeType);
     }
 
 
@@ -69,17 +76,6 @@ public class FileSystemStorageService implements StorageService {
             throw new RuntimeException("Could not initialize storage location", e);
         }
     }
-
-    public void saveChunkToFile(String encodedData,String fileNameWithExtension,String meetingId) throws IOException {
-        //append the data to the end of the file
-
-        OutputStream out = new FileOutputStream(rootLocation + "/upload/"+meetingId+ "/"+fileNameWithExtension,true);
-        byte[] decoded = Base64.getDecoder().decode(encodedData);
-        //append to the file
-        out.write(decoded);
-        out.close();
-    }
-
 
     @Override
     public int store(MultipartFile file, String nameAndExt) {
@@ -94,6 +90,8 @@ public class FileSystemStorageService implements StorageService {
                 // This is a security check
                return OP_STATUS_INVALID_FILE_NAME;
             }
+
+            if(!isAllowedFileType(file)) return OP_STATUS_FILE_TYPE_NOT_ALLOWED;
 
             try (InputStream inputStream = file.getInputStream()) {
 
@@ -120,17 +118,6 @@ public class FileSystemStorageService implements StorageService {
         ImageIO.write(thumbImg, FilenameUtils.getExtension(file.getOriginalFilename()) ,new File(rootLocation,"thumb_"+nameAndExt));
     }
 
-    public Stream<Path> loadAll() {
-        try {
-            return Files.walk(this.rootPath, 1)
-                    .filter(path -> !path.equals(this.rootPath))
-                    .map(this.rootPath::relativize);
-        }
-        catch (IOException e) {
-            throw new RuntimeException("Failed to read stored files", e);
-        }
-
-    }
 
     public Path load(String filename,Path location) {
         return location.resolve(filename);
