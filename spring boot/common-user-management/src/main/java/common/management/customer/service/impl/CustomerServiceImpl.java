@@ -53,7 +53,7 @@ public class CustomerServiceImpl implements CustomerService, StaffCustomerServic
         var customer  = customerRepository.findByUserId(userId.get());
         if(customer.isEmpty())return OP_STATUS_CUSTOMER_NOT_FOUND;
 
-        String fileNameAndExt = storageService.generateFullFileName("complaint", file);
+        String fileNameAndExt = storageService.generateFullFileName("customer", file);
         int result = storageService.store(file, fileNameAndExt);
         if (result != OP_STATUS_SUCCESS) return result;
 
