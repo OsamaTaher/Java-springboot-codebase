@@ -11,6 +11,8 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface RoleCache {
+    void initRoleCache();
+
     void refreshRoleRequestMatcher(Role role);
 
     void insertRole(Role role);

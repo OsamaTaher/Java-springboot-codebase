@@ -1,9 +1,9 @@
 package common.management.notification.processor;
 
 import common.management.common.events.NotificationEvent;
-import common.management.notification.PushNotificationService;
-import common.management.notification.external.NotificationStaffService;
 import common.management.notification.model.Module;
+import common.management.notification.model.NotificationEntity;
+import common.management.notification.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -16,8 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class CustomerNotificationProcessor implements common.management.notification.processor.NotificcationEventProcessor {
-    private final NotificationStaffService staffService;
-    private final PushNotificationService pushNotificationService;
+    private final NotificationRepository notificationRepository;
     private final Module module = Module.customer;
 
     @Override
@@ -29,7 +28,13 @@ public class CustomerNotificationProcessor implements common.management.notifica
         var message = getMessage(event);
         var notifyTo = getNotifyTo(event);
 
-        pushNotificationService.send(event, message, module, notifyTo);
+        //save event to DB
+        var notification = new NotificationEntity().create(event, message, module, notifyTo);
+        notificationRepository.save(notification);
+        /*
+            CALL YOUR NOTIFICATION SERVICE HERE
+            EX: pushNotificationService.send(event, message, module, notifyTo);
+         */
     }
 
     private String getMessage(NotificationEvent event) {

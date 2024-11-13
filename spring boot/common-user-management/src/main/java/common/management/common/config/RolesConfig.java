@@ -39,8 +39,6 @@ public class RolesConfig {
     private RoleCache roleCache;
 
     @Autowired
-    private StaffRepository staffRepository;
-    @Autowired
     private UserService userService;
 
     @Autowired private UserRepository userRepository;
@@ -119,6 +117,9 @@ public class RolesConfig {
         if(oldAdmin.isEmpty()){
             generateNewAdmin();
         }
+
+        //init role cache
+        roleCache.initRoleCache();
     }
 
     private void generateNewAdmin() {

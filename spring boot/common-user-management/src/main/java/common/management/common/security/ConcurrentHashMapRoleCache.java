@@ -4,9 +4,8 @@ import common.management.administration.payload.response.RoleDto;
 import common.management.common.model.Privilege;
 import common.management.common.model.Role;
 import common.management.common.repository.RoleRepository;
-import jakarta.annotation.PostConstruct;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
@@ -17,9 +16,9 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-//TODO: refactor to interface
+
 @Component
-@DependsOn({"SpringContext"})
+@Log4j2
 public class ConcurrentHashMapRoleCache implements RoleCache {
     private final RoleRepository roleRepository;
     private ConcurrentMap<String, Role> definedRoles;
@@ -30,8 +29,9 @@ public class ConcurrentHashMapRoleCache implements RoleCache {
         this.roleRepository = roleRepository;
     }
 
-    @PostConstruct
-    private void initRoleCache() {
+    @Override
+    public void initRoleCache() {
+        log.info(">>>>>> initialize role cache");
 
         setDefinedRoles(new ConcurrentHashMap<>());
         setRequestMatchers(new ConcurrentHashMap<>());
