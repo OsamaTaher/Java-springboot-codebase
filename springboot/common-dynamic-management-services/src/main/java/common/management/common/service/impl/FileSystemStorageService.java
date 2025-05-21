@@ -23,6 +23,7 @@ import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static common.management.common.util.DateTimeHelper.getCurrentDateTimeString;
@@ -38,6 +39,8 @@ public class FileSystemStorageService implements StorageService {
 
     @Value("${image.thumb.width:100}")
     private int thumbWidth;
+
+    private final Pattern fileNamePattern = Pattern.compile("^[a-zA-Z0-9.-]+$");
 
     private final HashSet<String> allowedFileType = new HashSet<>(List.of(
             "image/jpeg","image/jpg","image/png"
@@ -86,7 +89,7 @@ public class FileSystemStorageService implements StorageService {
             if (file.isEmpty()) {
                 return OP_STATUS_FILE_EMPTY;
             }
-            if (nameAndExt.contains("..")) {
+            if (nameAndExt.contains("..") || !fileNamePattern.matcher(nameAndExt).matches()) {
                 // This is a security check
                return OP_STATUS_INVALID_FILE_NAME;
             }
@@ -126,6 +129,10 @@ public class FileSystemStorageService implements StorageService {
     @Override
     public Resource loadAsResource(String filename) {
         try {
+            if(!fileNamePattern.matcher(filename).matches()){
+                log.error("[ERROR] loadAsResource: invalid file name");
+                return null;
+            }
             Path location = Paths.get(rootLocation+"/");
             Path file = load(filename,location);
             Resource resource = new UrlResource(file.toUri());
