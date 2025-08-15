@@ -47,8 +47,5 @@ public class RoleChecker implements AccessChecker{
         return hasAccess;
     }
 
-    @Override
-    public boolean roleHasPermission(String roleName, PermissionsEnum permission){
-        return roleCache.getRolePermissions(roleName).contains(permission.name());
-    }
+
 }

@@ -122,24 +122,8 @@ public class ConcurrentHashMapRoleCache implements RoleCache {
     }
 
     @Override
-    public List<String> getRolePermissions(String roleName) {
-        if (definedRoles.containsKey(roleName) && definedRoles.get(roleName).getPermissions() != null) {
-            return Collections.unmodifiableList(definedRoles.get(roleName).getPermissions());
-        }
-        return new ArrayList<>();
-    }
-
-    @Override
     public boolean containsRole(String roleName) {
         return definedRoles.containsKey(roleName);
-    }
-
-    @Override
-    public void updateRolePermissions(String roleName, Set<PermissionsEnum> permissions) {
-        var role = definedRoles.get(roleName);
-        var permissionList = permissions.stream().map(Enum::name).toList();
-        role.setPermissions(new ArrayList<>(permissionList));
-
     }
 
     private void setRequestMatchers(ConcurrentHashMap<String, List<RequestMatcher>> requestMatchers) {

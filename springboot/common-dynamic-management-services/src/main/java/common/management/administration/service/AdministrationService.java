@@ -5,10 +5,8 @@ import common.management.administration.payload.request.RoleCreate;
 import common.management.administration.payload.request.RoleUpdatePrivilege;
 import common.management.administration.payload.request.UpdateUserRolesRequest;
 import common.management.administration.payload.response.RoleDto;
-import common.management.administration.payload.response.RolePermissionsDto;
 import common.management.common.model.Privilege;
 import common.management.common.model.Role;
-import common.management.common.security.PermissionsEnum;
 import common.management.common.util.OpWrapper;
 import common.management.department.payload.request.CreateDepartmentRequest;
 
@@ -39,10 +37,4 @@ public interface AdministrationService {
     int updateUserRoles(UpdateUserRolesRequest request);
 
     OpWrapper<List<RoleDto>> getUserRoles(String userId);
-
-    int updateRolePermissions(String roleName, Set<PermissionsEnum> permissions);
-
-    OpWrapper<RolePermissionsDto> getRolePermissions(String roleName);
-
-    OpWrapper<List<String>> getAllPermissions();
 }

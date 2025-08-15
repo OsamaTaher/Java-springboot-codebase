@@ -3,7 +3,6 @@ package common.management.common.service;
 import common.management.common.model.Privilege;
 import common.management.common.model.User;
 import common.management.common.payload.request.*;
-import common.management.common.security.PermissionsEnum;
 import common.management.common.util.OpWrapper;
 
 import java.util.List;
@@ -31,8 +30,6 @@ public interface UserService{
     boolean isAdmin();
 
     boolean isManager();
-
-    boolean hasPermission(PermissionsEnum permission);
 
     OpWrapper<List<Privilege>> getMyPrivileges();
 }

@@ -27,9 +27,6 @@ public interface RoleCache {
 
     Map<String, List<RequestMatcher>> getRequestMatchers();
 
-    List<String> getRolePermissions(String roleName);
-
     boolean containsRole(String roleName);
 
-    void updateRolePermissions(String roleName, Set<PermissionsEnum> permissions);
 }

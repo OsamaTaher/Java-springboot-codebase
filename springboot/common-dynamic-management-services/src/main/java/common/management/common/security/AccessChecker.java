@@ -7,5 +7,4 @@ public interface AccessChecker {
 
     boolean check(Authentication authentication, HttpServletRequest request);
 
-    boolean roleHasPermission(String roleName, PermissionsEnum permission);
 }

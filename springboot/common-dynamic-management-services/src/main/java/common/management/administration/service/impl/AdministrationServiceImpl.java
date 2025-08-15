@@ -5,13 +5,11 @@ import common.management.administration.payload.request.RoleCreate;
 import common.management.administration.payload.request.RoleUpdatePrivilege;
 import common.management.administration.payload.request.UpdateUserRolesRequest;
 import common.management.administration.payload.response.RoleDto;
-import common.management.administration.payload.response.RolePermissionsDto;
 import common.management.administration.service.*;
 import common.management.common.model.Privilege;
 import common.management.common.model.PrivilegeRepository;
 import common.management.common.model.Role;
 import common.management.common.repository.RoleRepository;
-import common.management.common.security.PermissionsEnum;
 import common.management.common.security.RoleCache;
 import common.management.common.service.UserService;
 import common.management.common.util.OpWrapper;
@@ -207,32 +205,7 @@ public class AdministrationServiceImpl implements AdministrationService {
         return new OpWrapper<>(OP_STATUS_SUCCESS,roleDtoList);
     }
 
-    @Override
-    @Transactional
-    public int updateRolePermissions(String roleName, Set<PermissionsEnum> permissions){
-        var roleId =  roleCache.getRoleId(roleName);
-        if(roleId.isEmpty()) return OP_STATUS_ROLE_NOT_FOUND;
 
-        var role = roleRepository.findById(roleId.get());
-        if(role.isEmpty()) return OP_STATUS_ROLE_NOT_FOUND;
-        role.get().setPermissions(new ArrayList<>(permissions.stream().map(Enum::name).toList()));
-        roleCache.updateRolePermissions(roleName,permissions);
-        return OP_STATUS_SUCCESS;
-    }
-
-    @Override
-    public OpWrapper<RolePermissionsDto> getRolePermissions(String roleName){
-        var id  = roleCache.getRoleId(roleName);
-        if(id.isEmpty()) return  new OpWrapper<>(OP_STATUS_ROLE_NOT_FOUND,null);
-        var permissions = roleCache.getRolePermissions(roleName);
-        return new OpWrapper<>(OP_STATUS_SUCCESS,new RolePermissionsDto(id.get(),roleName,permissions));
-    }
-
-    @Override
-    public OpWrapper<List<String>> getAllPermissions(){
-        var permissions = Arrays.stream(PermissionsEnum.values()).map(v -> v.name()).toList();
-        return new OpWrapper<>(OP_STATUS_SUCCESS,permissions);
-    }
 
     private OpWrapper<Set<Role>> checkRolesAndRemoveInvalid(Set<Long> roles) {
         Set<Role> checked = new HashSet<>();

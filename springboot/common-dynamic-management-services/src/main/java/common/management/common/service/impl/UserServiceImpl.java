@@ -13,7 +13,6 @@ import common.management.common.payload.response.LoginResponse;
 import common.management.common.repository.RoleRepository;
 import common.management.common.repository.UserRepository;
 import common.management.common.security.AccessChecker;
-import common.management.common.security.PermissionsEnum;
 import common.management.common.security.RoleCache;
 import common.management.common.service.JwtService;
 import common.management.common.service.RefreshTokenService;
@@ -249,18 +248,6 @@ public class UserServiceImpl implements UserService, AdminUserService {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             return auth.getAuthorities().stream().anyMatch(g -> g.getAuthority().equals("ROLE_MANAGER"));
         } catch (Exception e) {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean hasPermission(PermissionsEnum permission) {
-        try {
-            if (isAdmin()) return true;
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            return auth.getAuthorities().stream().anyMatch(g -> accessChecker.roleHasPermission(g.getAuthority(), permission));
-        } catch (Exception e) {
-            log.error("[EXCEPTION] hasPermission :{},{}", e.getMessage(), e);
             return false;
         }
     }

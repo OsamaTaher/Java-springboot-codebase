@@ -5,7 +5,6 @@ import common.management.administration.payload.request.RoleCreate;
 import common.management.administration.payload.request.RoleUpdatePrivilege;
 import common.management.administration.payload.request.UpdateUserRolesRequest;
 import common.management.administration.service.AdministrationService;
-import common.management.common.security.PermissionsEnum;
 import common.management.common.util.OperationStatus;
 import common.management.department.payload.request.CreateDepartmentRequest;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -93,21 +92,5 @@ public class AdministrationController {
     @PutMapping("/roles/user")
     public ResponseEntity<?> updateUserRoles(@Valid @RequestBody UpdateUserRolesRequest request){
         return operationStatus.handle(administrationService.updateUserRoles(request));
-    }
-
-    /********************** PERMISSIONS **************************/
-    @PutMapping("/roles/permissions/{roleName}")
-    public ResponseEntity<?> updateRolePermissions(@PathVariable(name = "roleName") String roleName, @RequestBody Set<PermissionsEnum> permissions){
-        return operationStatus.handle(administrationService.updateRolePermissions(roleName,permissions));
-    }
-
-    @GetMapping("/permissions")
-    public ResponseEntity<?> getAllPermissions(){
-        return operationStatus.handle(administrationService.getAllPermissions());
-    }
-
-    @GetMapping("roles/permissions/{roleName}")
-    public ResponseEntity<?> getRolePermissions(@PathVariable(name = "roleName") String roleName){
-        return operationStatus.handle(administrationService.getRolePermissions(roleName));
     }
 }
